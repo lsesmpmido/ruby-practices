@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 (1..20).each do |num|
   text = ''
   # 3の倍数のとき
