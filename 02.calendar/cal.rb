@@ -15,13 +15,12 @@ opt.parse!(ARGV)
 
 first_date = Date.new(options[:year], options[:month], 1)
 last_date = Date.new(options[:year], options[:month], -1)
-days = [*1..last_date.day]
 
 puts "      #{options[:month]}月 #{options[:year]}"
 puts '日 月 火 水 木 金 土'
 print '   ' * first_date.wday
-days.each do |day|
-  print day.to_s.rjust(2) + " "
-  puts if ((day + first_date.wday) % 7).zero?
+(first_date..last_date).each do |date|
+  print date.day.to_s.rjust(2) + " "
+  puts if ((date.day + first_date.wday) % 7).zero?
 end
 puts
