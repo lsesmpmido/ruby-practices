@@ -19,7 +19,7 @@ days = [*1..last_date.day]
 
 puts "      #{options[:month]}月 #{options[:year]}"
 puts '日 月 火 水 木 金 土'
-first_date.wday.times { printf '   ' }
+print '   ' * first_date.wday
 days.each do |day|
   printf '%2d ', day
   puts if ((day + first_date.wday) % 7).zero?
