@@ -4,7 +4,7 @@
   text = ''
   text += 'Fizz' if (num % 3).zero?
   text += 'Buzz' if (num % 5).zero?
-  text = num unless (num % 3).zero? || (num % 5).zero?
+  text = num if text.empty?
 
   puts text
 end
