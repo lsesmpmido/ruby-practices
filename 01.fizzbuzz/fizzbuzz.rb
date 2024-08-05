@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-(1..20).each do |num|
+1.upto(20) do |num|
   text = ''
   # 3の倍数のとき
   text += 'Fizz' if (num % 3).zero?
