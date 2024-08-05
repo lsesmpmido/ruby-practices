@@ -26,6 +26,6 @@ puts '日 月 火 水 木 金 土'
 first_date.wday.times { printf '   ' }
 days.each do |day|
   printf '%2d ', day
-  printf "\n" if ((day + first_date.wday) % 7).zero?
+  puts if ((day + first_date.wday) % 7).zero?
 end
-printf "\n"
+puts
