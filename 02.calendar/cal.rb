@@ -21,7 +21,7 @@ puts "      #{options[:month]}月 #{options[:year]}"
 puts '日 月 火 水 木 金 土'
 print '   ' * first_date.wday
 days.each do |day|
-  printf '%2d ', day
+  print day.to_s.rjust(2) + " "
   puts if ((day + first_date.wday) % 7).zero?
 end
 puts
