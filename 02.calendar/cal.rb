@@ -21,6 +21,6 @@ puts '日 月 火 水 木 金 土'
 print '   ' * first_date.wday
 (first_date..last_date).each do |date|
   print date.day.to_s.rjust(2) + " "
-  puts if ((date.day + first_date.wday) % 7).zero?
+  puts if date.saturday?
 end
 puts
