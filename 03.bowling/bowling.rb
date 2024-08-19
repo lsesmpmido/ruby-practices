@@ -4,14 +4,8 @@
 def main
   score = ARGV[0]
   scores = score.split(',')
-  shots = []
-  scores.each do |s|
-    if s == 'X'
-      shots << 10
-      shots << 0
-    else
-      shots << s.to_i
-    end
+  shots = scores.flat_map do |s|
+    s == 'X' ? [10, 0] : s.to_i
   end
   frames = create_frames(shots)
   point = calc_point(frames)
