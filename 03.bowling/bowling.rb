@@ -19,11 +19,9 @@ def main
 end
 
 def create_frames(shots)
-  frames = []
-  shots.each_slice(2) do |s|
-    frames << (s[0] == 10 ? [s[0]] : s)
+  frames = shots.each_slice(2).map do |s|
+    s[0] == 10 ? [s[0]] : s
   end
-  frames
 end
 
 def calc_point(frames)
