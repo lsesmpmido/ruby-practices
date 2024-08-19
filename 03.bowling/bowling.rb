@@ -1,6 +1,23 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+def main
+  score = ARGV[0]
+  scores = score.split(',')
+  shots = []
+  scores.each do |s|
+    if s == 'X'
+      shots << 10
+      shots << 0
+    else
+      shots << s.to_i
+    end
+  end
+  frames = create_frames(shots)
+  point = calc_point(frames)
+  puts point
+end
+
 def create_frames(shots)
   frames = []
   shots.each_slice(2) do |s|
@@ -29,17 +46,4 @@ def calc_extra_point(frames, num)
   frames.flatten.first(num).sum
 end
 
-score = ARGV[0]
-scores = score.split(',')
-shots = []
-scores.each do |s|
-  if s == 'X'
-    shots << 10
-    shots << 0
-  else
-    shots << s.to_i
-  end
-end
-frames = create_frames(shots)
-point = calc_point(frames)
-puts point
+main
