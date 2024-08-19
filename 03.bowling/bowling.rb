@@ -23,7 +23,7 @@ def calc_point(frames)
              elsif frame.sum == 10
                frame.sum + calc_extra_point(frames[index + 1..], 1)
              else
-               frame.sum
+               frame.sum + calc_extra_point(frames[index + 1..], 0)
              end
   end
   point
