@@ -4,11 +4,7 @@
 def create_frames(shots)
   frames = []
   shots.each_slice(2) do |s|
-    frames << if s[0] == 10
-                [s[0]]
-              else
-                s
-              end
+    frames << (s[0] == 10 ? [s[0]] : s)
   end
   frames
 end
