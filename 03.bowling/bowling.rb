@@ -40,8 +40,8 @@ def calc_point(frames)
   point
 end
 
-def calc_extra_point(frames, num)
-  frames.flatten.first(num).sum
+def calc_extra_point(frames, additional_range)
+  frames.flatten.first(additional_range).sum
 end
 
 main
