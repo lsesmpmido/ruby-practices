@@ -30,8 +30,7 @@ def calc_point(frames)
 end
 
 def calc_extra_point(frames, num)
-  flatten_frame = frames.flatten
-  flatten_frame.shift(num).sum
+  frames.flatten.first(num).sum
 end
 
 score = ARGV[0]
