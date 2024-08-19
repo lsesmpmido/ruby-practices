@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-def make_frames(shots)
+def create_frames(shots)
   frames = []
   shots.each_slice(2) do |s|
     frames << if s[0] == 10
@@ -13,15 +13,15 @@ def make_frames(shots)
   frames
 end
 
-def cal_point(frames)
+def calc_point(frames)
   point = 0
   frames.each_with_index do |frame, index|
     break if index >= 10
 
     point += if frame[0] == 10
-               frame.sum + cal_extra_point(frames[index + 1..], 2)
+               frame.sum + calc_extra_point(frames[index + 1..], 2)
              elsif frame.sum == 10
-               frame.sum + cal_extra_point(frames[index + 1..], 1)
+               frame.sum + calc_extra_point(frames[index + 1..], 1)
              else
                frame.sum
              end
@@ -29,7 +29,7 @@ def cal_point(frames)
   point
 end
 
-def cal_extra_point(frames, num)
+def calc_extra_point(frames, num)
   flatten_frame = frames.flatten
   flatten_frame.shift(num).sum
 end
@@ -45,6 +45,6 @@ scores.each do |s|
     shots << s.to_i
   end
 end
-frames = make_frames(shots)
-point = cal_point(frames)
+frames = create_frames(shots)
+point = calc_point(frames)
 puts point
