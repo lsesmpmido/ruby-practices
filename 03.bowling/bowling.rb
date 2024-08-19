@@ -41,7 +41,7 @@ def calc_point(frames)
 end
 
 def calc_extra_point(frames, additional_range)
-  frames.flatten.first(additional_range).sum
+  frames.flatten.take(additional_range).sum
 end
 
 main
