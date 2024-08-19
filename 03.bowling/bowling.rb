@@ -25,19 +25,15 @@ def create_frames(shots)
 end
 
 def calc_point(frames)
-  point = 0
-  frames.each_with_index do |frame, index|
-    break if index >= 10
-
-    point += if frame[0] == 10
-               frame.sum + calc_extra_point(frames[index + 1..], 2)
-             elsif frame.sum == 10
-               frame.sum + calc_extra_point(frames[index + 1..], 1)
-             else
-               frame.sum + calc_extra_point(frames[index + 1..], 0)
-             end
+  frames.take(10).each_with_index.sum do |frame, index|
+    if frame[0] == 10
+      frame.sum + calc_extra_point(frames[index + 1..], 2)
+    elsif frame.sum == 10
+      frame.sum + calc_extra_point(frames[index + 1..], 1)
+    else
+      frame.sum + calc_extra_point(frames[index + 1..], 0)
+    end
   end
-  point
 end
 
 def calc_extra_point(frames, additional_range)
