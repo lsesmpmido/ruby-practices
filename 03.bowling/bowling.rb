@@ -8,12 +8,11 @@ def main
     s == 'X' ? [10, 0] : s.to_i
   end
   frames = create_frames(shots)
-  point = calc_point(frames)
-  puts point
+  puts calc_point(frames)
 end
 
 def create_frames(shots)
-  frames = shots.each_slice(2).map do |s|
+  shots.each_slice(2).map do |s|
     s[0] == 10 ? [s[0]] : s
   end
 end
