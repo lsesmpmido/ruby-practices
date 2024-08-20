@@ -26,11 +26,11 @@ def calc_point(frames)
                        else
                          0
                        end
-    frame.sum + calc_extra_point(frames[index + 1..], additional_range)
+    frame.sum + calc_additional_point(frames[index + 1..], additional_range)
   end
 end
 
-def calc_extra_point(frames, additional_range)
+def calc_additional_point(frames, additional_range)
   frames.flatten.take(additional_range).sum
 end
 
