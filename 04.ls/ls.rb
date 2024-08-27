@@ -3,15 +3,15 @@
 
 def main
   files = Dir.glob('*')
-  column_number = 3
-  row_number = (files.size / column_number.to_f).ceil
-  show_file_list(files, column_number, row_number)
+  column_count = 3
+  row_count = (files.size / column_count.to_f).ceil
+  show_file_list(files, column_count, row_count)
 end
 
-def show_file_list(files, column_number, row_number)
-  row_number.times do |r|
-    column_number.times do |c|
-      print files[r + row_number * c].to_s.ljust(18)
+def show_file_list(files, column_count, row_count)
+  row_count.times do |row|
+    column_count.times do |column|
+      print files[row + row_count *column].to_s.ljust(18)
     end
     puts
   end
