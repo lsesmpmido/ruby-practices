@@ -4,11 +4,11 @@
 def main
   files = Dir.glob('*')
   column_count = 3
-  row_count = (files.size / column_count.to_f).ceil
-  show_file_list(files, column_count, row_count)
+  show_file_list(files, column_count)
 end
 
-def show_file_list(files, column_count, row_count)
+def show_file_list(files, column_count)
+  row_count = files.size.ceildiv(column_count)
   row_count.times do |row|
     column_count.times do |column|
       print files[row + row_count *column].to_s.ljust(18)
