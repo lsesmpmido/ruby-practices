@@ -19,19 +19,19 @@ end
 
 def calc_point(frames)
   frames.take(10).each_with_index.sum do |frame, index|
-    additional_range = if frame[0] == 10
+    bonus_cnt = if frame[0] == 10
                          2
                        elsif frame.sum == 10
                          1
                        else
                          0
                        end
-    frame.sum + calc_additional_point(frames[index + 1..], additional_range)
+    frame.sum + calc_additional_point(frames[index + 1..], bonus_cnt)
   end
 end
 
-def calc_additional_point(frames, additional_range)
-  frames.flatten.take(additional_range).sum
+def calc_additional_point(frames, bonus_cnt)
+  frames.flatten.take(bonus_cnt).sum
 end
 
 main
