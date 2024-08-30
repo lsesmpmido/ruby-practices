@@ -12,11 +12,8 @@ def main
   opts.on('-a', '--all', 'List all files') { options[:all] = true }
   opts.parse(ARGV)
 
-  files = if options[:all]
-            Dir.glob('*', File::FNM_DOTMATCH)
-          else
-            Dir.glob('*')
-          end
+  flags = options[:all] ? File::FNM_DOTMATCH : 0
+  files = Dir.glob('*', flags)
   show_file_list(files.sort, COLUMN_COUNT)
 end
 
