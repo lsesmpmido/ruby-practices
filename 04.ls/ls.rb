@@ -10,11 +10,13 @@ def main
   options = {}
   opts = OptionParser.new
   opts.on('-a', '--all', 'List all files') { options[:all] = true }
+  opts.on('-r', '--reverse', 'List files in reverse order') { options[:reverse] = true }
   opts.parse(ARGV)
 
   flags = options[:all] ? File::FNM_DOTMATCH : 0
-  files = Dir.glob('*', flags)
-  show_file_list(files.sort, COLUMN_COUNT)
+  files = Dir.glob('*', flags).sort
+  files = files.reverse if options[:reverse]
+  show_file_list(files, COLUMN_COUNT)
 end
 
 def show_file_list(files, column_count)
