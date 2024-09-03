@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require 'optparse'
+require 'etc'
 
 COLUMN_COUNT = 3
 LIST_WIDTH = 18
@@ -11,12 +12,17 @@ def main
   opts = OptionParser.new
   opts.on('-a', '--all', 'List all files') { options[:all] = true }
   opts.on('-r', '--reverse', 'List files in reverse order') { options[:reverse] = true }
+  opts.on('-l', '--long', 'List long files') { options[:long] = true }
   opts.parse(ARGV)
 
   flags = options[:all] ? File::FNM_DOTMATCH : 0
   files = Dir.glob('*', flags).sort
   files = files.reverse if options[:reverse]
-  show_file_list(files, COLUMN_COUNT)
+  if options[:long]
+    show_long_file_list(files)
+  else
+    show_file_list(files, COLUMN_COUNT)
+  end
 end
 
 def show_file_list(files, column_count)
@@ -26,6 +32,58 @@ def show_file_list(files, column_count)
       print files[row + row_count * column].to_s.ljust(LIST_WIDTH)
     end
     puts
+  end
+end
+
+def color_file_name(file, permissions)
+  if permissions[0] == 'd'
+    "\e[1;34m#{file}\e[0m"
+  elsif permissions.include?('x')
+    "\e[1;32m#{file}\e[0m"
+  else
+    file
+  end
+end
+
+def show_long_file_list(files)
+  total_blocks = 0
+  files.each { |file| total_blocks += File::Stat.new(file).blocks }
+  puts "total #{total_blocks / 2}"
+  files.each do |file|
+    permissions = File.ftype(file) == 'directory' ? 'd' : '-'
+    file_status = File::Stat.new(file)
+    file_mode = (file_status.mode & 0o777).to_s(8).split('')
+    file_mode.each { |digit| permissions += show_permission(digit) }
+    print "#{permissions} "
+    print "#{file_status.nlink} "
+    print "#{Etc.getpwuid(file_status.uid).name} "
+    print "#{Etc.getgrgid(file_status.gid).name} "
+    print "#{file_status.size.to_s.rjust(4)} "
+    print "#{file_status.mtime.strftime('%b')} "
+    print "#{file_status.mtime.day.to_s.rjust(2)} "
+    print "#{file_status.mtime.strftime('%H:%M')} "
+    print "#{color_file_name(file, permissions)}\n"
+  end
+end
+
+def show_permission(str)
+  case str.to_i
+  when 0
+    '---'
+  when 1
+    '--x'
+  when 2
+    '-w-'
+  when 3
+    '-wx'
+  when 4
+    'r--'
+  when 5
+    'r-x'
+  when 6
+    'rw-'
+  when 7
+    'rwx'
   end
 end
 
