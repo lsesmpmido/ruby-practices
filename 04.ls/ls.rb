@@ -46,9 +46,7 @@ def color_file_name(file, permissions)
 end
 
 def show_long_file_list(files)
-  total_blocks = 0
-  files.each { |file| total_blocks += File::Stat.new(file).blocks }
-  puts "total #{total_blocks / 2}"
+  puts "total #{files.sum { |file| File::Stat.new(file).blocks / 2 }}"
   files.each do |file|
     permissions = File.ftype(file) == 'directory' ? 'd' : '-'
     file_status = File::Stat.new(file)
