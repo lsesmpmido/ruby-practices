@@ -48,11 +48,11 @@ end
 def show_long_file_list(files)
   puts "total #{files.sum { |file| File::Stat.new(file).blocks / 2 }}"
   files.each do |file|
-    file_type = File.ftype(file) == 'directory' ? 'd' : '-'
+    permissions = File.ftype(file) == 'directory' ? 'd' : '-'
     file_status = File::Stat.new(file)
     file_mode = (file_status.mode & 0o777).to_s(8).split('')
-    permissions = file_mode.map { |digit| show_permission(digit) }.join
-    print "#{file_type + permissions} "
+    file_mode.each { |digit| permissions += show_permission(digit) }
+    print "#{permissions} "
     print "#{file_status.nlink} "
     print "#{Etc.getpwuid(file_status.uid).name} "
     print "#{Etc.getgrgid(file_status.gid).name} "
@@ -60,7 +60,7 @@ def show_long_file_list(files)
     print "#{file_status.mtime.strftime('%b')} "
     print "#{file_status.mtime.day.to_s.rjust(2)} "
     print "#{file_status.mtime.strftime('%H:%M')} "
-    print "#{color_file_name(file, file_type + permissions)}\n"
+    print "#{color_file_name(file, permissions)}\n"
   end
 end
 
