@@ -64,25 +64,17 @@ def show_long_file_list(files)
   end
 end
 
-def show_permission(str)
-  case str.to_i
-  when 0
-    '---'
-  when 1
-    '--x'
-  when 2
-    '-w-'
-  when 3
-    '-wx'
-  when 4
-    'r--'
-  when 5
-    'r-x'
-  when 6
-    'rw-'
-  when 7
-    'rwx'
-  end
+def show_permission(digit)
+  {
+    '0' => '---',
+    '1' => '--x',
+    '2' => '-w-',
+    '3' => '-wx',
+    '4' => 'r--',
+    '5' => 'r-x',
+    '6' => 'rw-',
+    '7' => 'rwx'
+  }[digit]
 end
 
 main
