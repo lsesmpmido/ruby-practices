@@ -48,10 +48,10 @@ end
 def show_long_file_list(files)
   puts "total #{files.sum { |file| File::Stat.new(file).blocks / 2 }}"
   files.each do |file|
-    permissions = File.ftype(file) == 'directory' ? 'd' : '-'
     file_status = File::Stat.new(file)
     file_mode = (file_status.mode & 0o777).to_s(8).split('')
-    file_mode.each { |digit| permissions += show_permission(digit) }
+    permissions = file_mode.map { |digit| show_permission(digit) }.join
+    permissions.prepend(File.ftype(file) == 'directory' ? 'd' : '-')
     print "#{permissions} "
     print "#{file_status.nlink} "
     print "#{Etc.getpwuid(file_status.uid).name} "
