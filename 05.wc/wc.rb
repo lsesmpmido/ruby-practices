@@ -9,7 +9,7 @@ def main
   total_info = { lines: [], words: [], bytes: [] }
   paths = load_option(options).empty? ? [''] : load_option(options)
   contais_path(paths, file_info)
-  
+
   file_info.each do |key, array|
     total_info[key] << array.sum
   end
