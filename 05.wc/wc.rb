@@ -3,17 +3,21 @@
 
 require 'optparse'
 
+def load_option(options)
+  opts = OptionParser.new
+  opts.on('-l', '--lines', 'print the newline counts') { options[:lines] = true }
+  opts.on('-w', '--words', 'print the word counts') { options[:words] = true }
+  opts.on('-c', '--bytes', 'print the byte counts') { options[:bytes] = true }
+  opts.parse!(ARGV)
+  ARGV
+end
+
 options = {}
 lines = []
 words = []
 sizes = []
 
-opts = OptionParser.new
-opts.on('-l', '--lines', 'print the newline counts') { options[:lines] = true }
-opts.on('-w', '--words', 'print the word counts') { options[:words] = true }
-opts.on('-c', '--bytes', 'print the byte counts') { options[:bytes] = true }
-opts.parse!(ARGV)
-paths = ARGV
+paths = load_option(options).empty? ? [''] : load_option(options)
 
 paths.each do |path|
   lines << File.read(path).lines.size
