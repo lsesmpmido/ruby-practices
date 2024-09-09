@@ -12,6 +12,14 @@ def load_option(options)
   ARGV
 end
 
+def contais_path(paths, file_info)
+  if paths[0].empty?
+    add_info($stdin.read, file_info)
+  else
+    paths.each { |path| add_info(File.read(path), file_info) }
+  end
+end
+
 def add_info(content, file_info)
   file_info[:lines] << content.lines.size
   file_info[:words] << content.split(' ').size
@@ -28,7 +36,7 @@ options = {}
 file_info = { lines: [], words: [], bytes: [] }
 total_info = { lines: [], words: [], bytes: [] }
 paths = load_option(options).empty? ? [''] : load_option(options)
-paths.each { |path| add_info(File.read(path), file_info) }
+contais_path(paths, file_info)
 
 file_info.each do |key, array|
   total_info[key] << array.sum
