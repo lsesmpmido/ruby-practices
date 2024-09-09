@@ -18,6 +18,12 @@ def add_info(content, file_info)
   file_info[:bytes] << content.bytesize
 end
 
+def show_info(info, index, width, options = {})
+  info.each_key do |key|
+    print "#{info[key][index].to_s.rjust(width)} " if !options[key].nil? || options.empty?
+  end
+end
+
 options = {}
 file_info = { lines: [], words: [], bytes: [] }
 total_info = { lines: [], words: [], bytes: [] }
@@ -27,13 +33,12 @@ paths.each { |path| add_info(File.read(path), file_info) }
 file_info.each do |key, array|
   total_info[key] << array.sum
 end
-paths.each_with_index do |path, index|
-  print "#{file_info[:lines][index].to_s.rjust(file_info[:lines].sum.to_s.size)} " if options[:lines] || options.empty?
-  print "#{file_info[:words][index].to_s.rjust(file_info[:words].sum.to_s.size)} " if options[:words] || options.empty?
-  print "#{file_info[:bytes][index].to_s.rjust(file_info[:bytes].sum.to_s.size)} " if options[:bytes] || options.empty?
-  puts  path
+width = total_info.values.max[0].to_s.length
+unless paths.size.equal?(1)
+  file_info.each_key { |key| file_info[key].concat(total_info[key]) }
+  paths << 'total'
 end
-print "#{total_info[:lines][0].to_s.rjust(total_info[:lines].sum.to_s.size)} " if options[:lines] || options.empty?
-print "#{total_info[:words][0].to_s.rjust(total_info[:words].sum.to_s.size)} " if options[:words] || options.empty?
-print "#{total_info[:bytes][0].to_s.rjust(total_info[:bytes].sum.to_s.size)} " if options[:bytes] || options.empty?
-puts  "total"
+paths.each_with_index do |path, index|
+  show_info(file_info, index, width, options)
+  puts path
+end
