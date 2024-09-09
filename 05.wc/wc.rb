@@ -12,15 +12,16 @@ def load_option(options)
   ARGV
 end
 
+def add_info(content, file_info)
+  file_info[:lines] << content.lines.size
+  file_info[:words] << content.split(' ').size
+  file_info[:bytes] << content.bytesize
+end
+
 options = {}
 file_info = { lines: [], words: [], bytes: [] }
 paths = load_option(options).empty? ? [''] : load_option(options)
-
-paths.each do |path|
-  file_info[:lines] << File.read(path).lines.size
-  file_info[:words] << File.read(path).split(' ').size
-  file_info[:bytes] << File.read(path).bytesize
-end
+paths.each { |path| add_info(File.read(path), file_info) }
 
 paths.each_with_index do |path, index|
   print "#{file_info[:lines][index].to_s.rjust(file_info[:lines].sum.to_s.size)} " if options[:lines] || options.empty?
