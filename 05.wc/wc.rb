@@ -13,22 +13,19 @@ def load_option(options)
 end
 
 options = {}
-lines = []
-words = []
-sizes = []
-
+file_info = { lines: [], words: [], bytes: [] }
 paths = load_option(options).empty? ? [''] : load_option(options)
 
 paths.each do |path|
-  lines << File.read(path).lines.size
-  words << File.read(path).split(' ').size
-  sizes << File.open(path).size
+  file_info[:lines] << File.read(path).lines.size
+  file_info[:words] << File.read(path).split(' ').size
+  file_info[:bytes] << File.read(path).bytesize
 end
 
 paths.each_with_index do |path, index|
-  print "#{lines[index].to_s.rjust(lines.sum.to_s.size)} " if options[:lines] || options.empty?
-  print "#{words[index].to_s.rjust(words.sum.to_s.size)} " if options[:words] || options.empty?
-  print "#{sizes[index].to_s.rjust(sizes.sum.to_s.size)} " if options[:bytes] || options.empty?
+  print "#{file_info[:lines][index].to_s.rjust(file_info[:lines].sum.to_s.size)} " if options[:lines] || options.empty?
+  print "#{file_info[:words][index].to_s.rjust(file_info[:words].sum.to_s.size)} " if options[:words] || options.empty?
+  print "#{file_info[:bytes][index].to_s.rjust(file_info[:bytes].sum.to_s.size)} " if options[:bytes] || options.empty?
   puts  path
 end
-puts "#{lines.sum} #{words.sum} #{sizes.sum} total" unless paths.size.equal?(1)
+puts "#{file_info[:lines].sum} #{file_info[:words].sum} #{file_info[:bytes].sum} total" unless paths.size.equal?(1)
