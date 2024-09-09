@@ -3,6 +3,27 @@
 
 require 'optparse'
 
+def main
+  options = {}
+  file_info = { lines: [], words: [], bytes: [] }
+  total_info = { lines: [], words: [], bytes: [] }
+  paths = load_option(options).empty? ? [''] : load_option(options)
+  contais_path(paths, file_info)
+  
+  file_info.each do |key, array|
+    total_info[key] << array.sum
+  end
+  width = total_info.values.max[0].to_s.length
+  unless paths.size.equal?(1)
+    file_info.each_key { |key| file_info[key].concat(total_info[key]) }
+    paths << 'total'
+  end
+  paths.each_with_index do |path, index|
+    show_info(file_info, index, width, options)
+    puts path
+  end
+end
+
 def load_option(options)
   opts = OptionParser.new
   opts.on('-l', '--lines', 'print the newline counts') { options[:lines] = true }
@@ -32,21 +53,4 @@ def show_info(info, index, width, options = {})
   end
 end
 
-options = {}
-file_info = { lines: [], words: [], bytes: [] }
-total_info = { lines: [], words: [], bytes: [] }
-paths = load_option(options).empty? ? [''] : load_option(options)
-contais_path(paths, file_info)
-
-file_info.each do |key, array|
-  total_info[key] << array.sum
-end
-width = total_info.values.max[0].to_s.length
-unless paths.size.equal?(1)
-  file_info.each_key { |key| file_info[key].concat(total_info[key]) }
-  paths << 'total'
-end
-paths.each_with_index do |path, index|
-  show_info(file_info, index, width, options)
-  puts path
-end
+main
