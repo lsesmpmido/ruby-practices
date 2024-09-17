@@ -15,7 +15,7 @@ def main
   file_metadata[:paths].each_index do |index|
     show_metadata(file_metadata, index, width, options)
   end
-  return if paths.size.equal?(1)
+  return if file_metadata[:paths].size <= 1
 
   total = total_metadata(file_metadata)
   show_metadata(total, 0, width, options)
@@ -42,7 +42,7 @@ def contains_paths(paths, file_metadata)
   end
 end
 
-def add_metadata(content, path = 'aaa')
+def add_metadata(content, path = '')
   metadata = {}
   metadata[:lines] = [content.lines.size]
   metadata[:words] = [content.split(' ').size]
