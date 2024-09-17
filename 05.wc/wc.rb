@@ -12,7 +12,7 @@ def main
   width = file_metadata.values.flatten
                        .select { |num| num.is_a?(Integer) }
                        .map { |num| num.to_s.length }.max
-  paths.each_with_index do |_path, index|
+  file_metadata[:paths].each_index do |index|
     show_metadata(file_metadata, index, width, options)
   end
   return if paths.size.equal?(1)
