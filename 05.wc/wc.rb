@@ -34,7 +34,7 @@ def load_option(options)
 end
 
 def contains_paths(paths, file_metadata)
-  if paths[0].empty?
+  if paths[0].nil?
     add_metadata($stdin.read, file_metadata)
   else
     paths.each { |path| add_metadata(File.read(path), file_metadata) }
