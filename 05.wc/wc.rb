@@ -5,20 +5,20 @@ require 'optparse'
 
 def main
   options = {}
-  file_metadata = { lines: [], words: [], bytes: [] }
+  file_metadata = { lines: [], words: [], bytes: [], paths: [] }
 
   paths = load_option(options)
   file_metadata = contains_paths(paths, file_metadata)
-  width = file_metadata.values.flatten.map { |num| num.to_s.length }.max
-  paths.each_with_index do |path, index|
+  width = file_metadata.values.flatten
+                       .select { |num| num.is_a?(Integer) }
+                       .map { |num| num.to_s.length }.max
+  paths.each_with_index do |_path, index|
     show_metadata(file_metadata, index, width, options)
-    puts path
   end
   return if paths.size.equal?(1)
 
   total = total_metadata(file_metadata)
   show_metadata(total, 0, width, options)
-  puts 'total'
 end
 
 def load_option(options)
@@ -35,32 +35,41 @@ def contains_paths(paths, file_metadata)
     file_metadata = add_metadata($stdin.read)
   else
     paths.each do |path|
-      metadata = add_metadata(File.read(path))
+      metadata = add_metadata(File.read(path), path)
       file_metadata = file_metadata.merge(metadata) { |_key, old_value, new_value| old_value + new_value }
     end
     file_metadata
   end
 end
 
-def add_metadata(content)
+def add_metadata(content, path = 'aaa')
   metadata = {}
   metadata[:lines] = [content.lines.size]
   metadata[:words] = [content.split(' ').size]
   metadata[:bytes] = [content.bytesize]
+  metadata[:paths] = [path]
   metadata
 end
 
 def total_metadata(metadata)
   total = metadata.transform_values { [] }
   metadata.each do |key, array|
-    total[key] << array.sum
+    if array[0].is_a?(Integer)
+      total[key] << array.sum
+    else
+      total[key] = ['total']
+    end
   end
   total
 end
 
 def show_metadata(metadata, index, width, options = {})
   metadata.each_key do |key|
-    print "#{metadata[key][index].to_s.rjust(width)} " if !options[key].nil? || options.empty?
+    if key.equal?(:paths)
+      puts metadata[:paths][index]
+    elsif !options[key].nil? || options.empty?
+      print "#{metadata[key][index].to_s.rjust(width)} "
+    end
   end
 end
 
