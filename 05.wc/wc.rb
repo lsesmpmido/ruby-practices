@@ -8,8 +8,7 @@ def main
   file_metadata = { lines: [], words: [], bytes: [] }
   total_metadata = { lines: [], words: [], bytes: [] }
   paths = load_option(options)
-  contains_paths(paths, file_metadata)
-
+  file_metadata = contains_paths(paths, file_metadata)
   file_metadata.each do |key, array|
     total_metadata[key] << array.sum
   end
@@ -35,16 +34,22 @@ end
 
 def contains_paths(paths, file_metadata)
   if paths[0].nil?
-    add_metadata($stdin.read, file_metadata)
+    file_metadata = add_metadata($stdin.read)
   else
-    paths.each { |path| add_metadata(File.read(path), file_metadata) }
+    paths.each do |path|
+      metadata = add_metadata(File.read(path))
+      file_metadata = file_metadata.merge(metadata) { |_key, old_value, new_value| old_value + new_value }
+    end
+    file_metadata
   end
 end
 
-def add_metadata(content, file_metadata)
-  file_metadata[:lines] << content.lines.size
-  file_metadata[:words] << content.split(' ').size
-  file_metadata[:bytes] << content.bytesize
+def add_metadata(content)
+  metadata = {}
+  metadata[:lines] = [content.lines.size]
+  metadata[:words] = [content.split(' ').size]
+  metadata[:bytes] = [content.bytesize]
+  metadata
 end
 
 def show_metadata(metadata, index, width, options = {})
