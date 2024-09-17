@@ -7,7 +7,7 @@ def main
   options = {}
   file_info = { lines: [], words: [], bytes: [] }
   total_info = { lines: [], words: [], bytes: [] }
-  paths = load_option(options).empty? ? [''] : load_option(options)
+  paths = load_option(options)
   contais_path(paths, file_info)
 
   file_info.each do |key, array|
