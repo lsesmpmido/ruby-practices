@@ -6,21 +6,19 @@ require 'optparse'
 def main
   options = {}
   file_metadata = { lines: [], words: [], bytes: [] }
-  total_metadata = { lines: [], words: [], bytes: [] }
+
   paths = load_option(options)
   file_metadata = contains_paths(paths, file_metadata)
-  file_metadata.each do |key, array|
-    total_metadata[key] << array.sum
-  end
-  width = total_metadata.values.max[0].to_s.length
-  unless paths.size.equal?(1)
-    file_metadata.each_key { |key| file_metadata[key].concat(total_metadata[key]) }
-    paths << 'total'
-  end
+  width = file_metadata.values.flatten.map { |num| num.to_s.length }.max
   paths.each_with_index do |path, index|
     show_metadata(file_metadata, index, width, options)
     puts path
   end
+  return if paths.size.equal?(1)
+
+  total = total_metadata(file_metadata)
+  show_metadata(total, 0, width, options)
+  puts 'total'
 end
 
 def load_option(options)
@@ -50,6 +48,14 @@ def add_metadata(content)
   metadata[:words] = [content.split(' ').size]
   metadata[:bytes] = [content.bytesize]
   metadata
+end
+
+def total_metadata(metadata)
+  total = metadata.transform_values { [] }
+  metadata.each do |key, array|
+    total[key] << array.sum
+  end
+  total
 end
 
 def show_metadata(metadata, index, width, options = {})
