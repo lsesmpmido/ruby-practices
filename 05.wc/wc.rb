@@ -6,7 +6,7 @@ require 'optparse'
 def main
   paths, options = load_argument
   metadata_list = paths.empty? ? [get_metadata] : contains_paths(paths)
-  filtered_metadata_list = metadata_list.map { |metadata| metadata.reject { |_, value| value.is_a?(String) } }
+  filtered_metadata_list = metadata_list.map { |metadata| metadata.select { |_, value| value.is_a?(Integer) } }
   max_value = filtered_metadata_list.flat_map { |hash| hash.values.flatten }.max
   width = max_value.to_s.length
   show_metadata(metadata_list, width, options)
