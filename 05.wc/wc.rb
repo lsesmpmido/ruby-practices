@@ -5,17 +5,15 @@ require 'optparse'
 
 def main
   paths, options = load_argument
-  metadata_list = paths.empty? ? get_metadata : contains_paths(paths)
-  width = metadata_list.values.flatten
-                       .select { |num| num.is_a?(Integer) }
-                       .map { |num| num.to_s.length }.max
-  metadata_list[:paths].each_index do |index|
-    show_metadata(metadata_list, index, width, options)
-  end
-  return if metadata_list[:paths].size <= 1
+  metadata_list = paths.empty? ? [get_metadata] : contains_paths(paths)
+  filtered_metadata_list = metadata_list.map { |metadata| metadata.reject { |_, value| value.is_a?(String) } }
+  max_value = filtered_metadata_list.flat_map { |hash| hash.values.flatten }.max
+  width = max_value.to_s.length
+  show_metadata(metadata_list, width, options)
+  return if metadata_list.size <= 1
 
   total = total_metadata(metadata_list)
-  show_metadata(total, 0, width, options)
+  show_metadata(total, width, options)
 end
 
 def load_argument
@@ -29,10 +27,9 @@ def load_argument
 end
 
 def contains_paths(paths)
-  metadata_list = { lines: [], words: [], bytes: [], paths: [] }
+  metadata_list = []
   paths.each do |path|
-    metadata = get_metadata(path)
-    metadata_list = metadata_list.merge(metadata) { |_key, old_value, new_value| old_value + new_value }
+    metadata_list << get_metadata(path)
   end
   metadata_list
 end
@@ -40,31 +37,32 @@ end
 def get_metadata(path = '')
   content = path.empty? ? $stdin.read : File.read(path)
   metadata = {}
-  metadata[:lines] = [content.lines.size]
-  metadata[:words] = [content.split(' ').size]
-  metadata[:bytes] = [content.bytesize]
-  metadata[:paths] = [path]
+  metadata[:line_count] = content.lines.size
+  metadata[:word_count] = content.split(' ').size
+  metadata[:byte_count] = content.bytesize
+  metadata[:path] = path
   metadata
 end
 
-def total_metadata(metadata)
-  total = metadata.transform_values { [] }
-  metadata.each do |key, array|
-    if array[0].is_a?(Integer)
-      total[key] << array.sum
-    else
-      total[key] = ['total']
+def total_metadata(metadata_list)
+  total = { line_count: 0, word_count: 0, byte_count: 0, path: '' }
+  metadata_list.each_index do |index|
+    metadata_list[index].each do |key, value|
+      total[key] += value if value.is_a?(Integer)
     end
+    total[:path] = 'total'
   end
-  total
+  [total]
 end
 
-def show_metadata(metadata, index, width, options)
-  metadata.each_key do |key|
-    if key.equal?(:paths)
-      puts metadata[:paths][index]
-    elsif !options[key].nil? || options.empty?
-      print "#{metadata[key][index].to_s.rjust(width)} "
+def show_metadata(metadata_list, width, options)
+  metadata_list.each_index do |index|
+    metadata_list[index].each_key do |key|
+      if key.equal?(:path)
+        puts metadata_list[index][:path]
+      elsif !options[key].nil? || options.empty?
+        print "#{metadata_list[index][key].to_s.rjust(width)} "
+      end
     end
   end
 end
