@@ -63,7 +63,7 @@ def total_metadata(metadata)
   total
 end
 
-def show_metadata(metadata, index, width)
+def show_metadata(metadata, index, width, options = {})
   metadata.each_key do |key|
     if key.equal?(:paths)
       puts metadata[:paths][index]
