@@ -5,16 +5,16 @@ require 'optparse'
 
 def main
   paths, options = load_argument
-  file_metadata = paths.empty? ? get_metadata : contains_paths(paths)
-  width = file_metadata.values.flatten
+  metadata_list = paths.empty? ? get_metadata : contains_paths(paths)
+  width = metadata_list.values.flatten
                        .select { |num| num.is_a?(Integer) }
                        .map { |num| num.to_s.length }.max
-  file_metadata[:paths].each_index do |index|
-    show_metadata(file_metadata, index, width, options)
+  metadata_list[:paths].each_index do |index|
+    show_metadata(metadata_list, index, width, options)
   end
-  return if file_metadata[:paths].size <= 1
+  return if metadata_list[:paths].size <= 1
 
-  total = total_metadata(file_metadata)
+  total = total_metadata(metadata_list)
   show_metadata(total, 0, width, options)
 end
 
@@ -29,12 +29,12 @@ def load_argument
 end
 
 def contains_paths(paths)
-  file_metadata = { lines: [], words: [], bytes: [], paths: [] }
+  metadata_list = { lines: [], words: [], bytes: [], paths: [] }
   paths.each do |path|
     metadata = get_metadata(path)
-    file_metadata = file_metadata.merge(metadata) { |_key, old_value, new_value| old_value + new_value }
+    metadata_list = metadata_list.merge(metadata) { |_key, old_value, new_value| old_value + new_value }
   end
-  file_metadata
+  metadata_list
 end
 
 def get_metadata(path = '')
