@@ -19,9 +19,9 @@ end
 def load_argument
   options = {}
   opts = OptionParser.new
-  opts.on('-l', '--lines', 'print the newline counts') { options[:lines] = true }
-  opts.on('-w', '--words', 'print the word counts') { options[:words] = true }
-  opts.on('-c', '--bytes', 'print the byte counts') { options[:bytes] = true }
+  opts.on('-l', '--lines', 'print the newline counts') { options[:line_count] = true }
+  opts.on('-w', '--words', 'print the word counts') { options[:word_count] = true }
+  opts.on('-c', '--bytes', 'print the byte counts') { options[:byte_count] = true }
   opts.parse!(ARGV)
   [ARGV, options]
 end
