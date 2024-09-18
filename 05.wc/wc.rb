@@ -4,10 +4,9 @@
 require 'optparse'
 
 def main
-  options = {}
   file_metadata = { lines: [], words: [], bytes: [], paths: [] }
 
-  paths = load_option(options)
+  paths, options = load_argument
   file_metadata = contains_paths(paths, file_metadata)
   width = file_metadata.values.flatten
                        .select { |num| num.is_a?(Integer) }
@@ -21,13 +20,14 @@ def main
   show_metadata(total, 0, width, options)
 end
 
-def load_option(options)
+def load_argument
+  options = {}
   opts = OptionParser.new
   opts.on('-l', '--lines', 'print the newline counts') { options[:lines] = true }
   opts.on('-w', '--words', 'print the word counts') { options[:words] = true }
   opts.on('-c', '--bytes', 'print the byte counts') { options[:bytes] = true }
   opts.parse!(ARGV)
-  ARGV
+  [ARGV, options]
 end
 
 def contains_paths(paths, file_metadata)
