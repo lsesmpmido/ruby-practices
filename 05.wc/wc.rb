@@ -32,17 +32,17 @@ end
 
 def contains_paths(paths, file_metadata)
   if paths[0].nil?
-    file_metadata = add_metadata($stdin.read)
+    file_metadata = get_metadata($stdin.read)
   else
     paths.each do |path|
-      metadata = add_metadata(File.read(path), path)
+      metadata = get_metadata(File.read(path), path)
       file_metadata = file_metadata.merge(metadata) { |_key, old_value, new_value| old_value + new_value }
     end
     file_metadata
   end
 end
 
-def add_metadata(content, path = '')
+def get_metadata(content, path = '')
   metadata = {}
   metadata[:lines] = [content.lines.size]
   metadata[:words] = [content.split(' ').size]
