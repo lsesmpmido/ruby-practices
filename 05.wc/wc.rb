@@ -4,10 +4,8 @@
 require 'optparse'
 
 def main
-  file_metadata = { lines: [], words: [], bytes: [], paths: [] }
-
   paths, options = load_argument
-  file_metadata = contains_paths(paths, file_metadata)
+  file_metadata = contains_paths(paths)
   width = file_metadata.values.flatten
                        .select { |num| num.is_a?(Integer) }
                        .map { |num| num.to_s.length }.max
@@ -30,19 +28,21 @@ def load_argument
   [ARGV, options]
 end
 
-def contains_paths(paths, file_metadata)
+def contains_paths(paths)
+  file_metadata = { lines: [], words: [], bytes: [], paths: [] }
   if paths[0].nil?
-    file_metadata = get_metadata($stdin.read)
+    file_metadata = get_metadata
   else
     paths.each do |path|
-      metadata = get_metadata(File.read(path), path)
+      metadata = get_metadata(path)
       file_metadata = file_metadata.merge(metadata) { |_key, old_value, new_value| old_value + new_value }
     end
     file_metadata
   end
 end
 
-def get_metadata(content, path = '')
+def get_metadata(path = '')
+  content = path.empty? ? $stdin.read : File.read(path)
   metadata = {}
   metadata[:lines] = [content.lines.size]
   metadata[:words] = [content.split(' ').size]
