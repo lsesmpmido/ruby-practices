@@ -5,7 +5,7 @@ require 'optparse'
 
 def main
   paths, options = load_argument
-  metadata_list = paths.empty? ? [get_metadata] : contains_paths(paths)
+  metadata_list = paths.empty? ? [get_metadata] : get_metadata_from_paths(paths)
   filtered_metadata_list = metadata_list.map { |metadata| metadata.select { |_, value| value.is_a?(Integer) } }
   max_value = filtered_metadata_list.flat_map { |hash| hash.values.flatten }.max
   padding_width = max_value.to_s.length
@@ -26,7 +26,7 @@ def load_argument
   [ARGV, options]
 end
 
-def contains_paths(paths)
+def get_metadata_from_paths(paths)
   metadata_list = []
   paths.each do |path|
     metadata_list << get_metadata(path)
