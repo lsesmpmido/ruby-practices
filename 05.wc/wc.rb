@@ -8,12 +8,12 @@ def main
   metadata_list = paths.empty? ? [get_metadata] : contains_paths(paths)
   filtered_metadata_list = metadata_list.map { |metadata| metadata.select { |_, value| value.is_a?(Integer) } }
   max_value = filtered_metadata_list.flat_map { |hash| hash.values.flatten }.max
-  width = max_value.to_s.length
-  show_metadata(metadata_list, width, options)
+  padding_width = max_value.to_s.length
+  show_metadata(metadata_list, padding_width, options)
   return if metadata_list.size <= 1
 
   total = total_metadata(metadata_list)
-  show_metadata(total, width, options)
+  show_metadata(total, padding_width, options)
 end
 
 def load_argument
@@ -55,13 +55,13 @@ def total_metadata(metadata_list)
   [total]
 end
 
-def show_metadata(metadata_list, width, options)
+def show_metadata(metadata_list, padding_width, options)
   metadata_list.each_index do |index|
     metadata_list[index].each_key do |key|
       if key.equal?(:path)
         puts metadata_list[index][:path]
       elsif !options[key].nil? || options.empty?
-        print "#{metadata_list[index][key].to_s.rjust(width)} "
+        print "#{metadata_list[index][key].to_s.rjust(padding_width)} "
       end
     end
   end
