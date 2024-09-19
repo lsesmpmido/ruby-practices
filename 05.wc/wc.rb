@@ -5,7 +5,7 @@ require 'optparse'
 
 def main
   paths, options = load_argument
-  metadata_list = paths.empty? ? [get_metadata] : get_metadata_from_paths(paths)
+  metadata_list = paths.empty? ? [get_metadata($stdin.read)] : get_metadata_from_paths(paths)
   filtered_metadata_list = metadata_list.map { |metadata| metadata.select { |_, value| value.is_a?(Integer) } }
   max_value = filtered_metadata_list.flat_map { |hash| hash.values.flatten }.max
   padding_width = max_value.to_s.length
@@ -29,13 +29,13 @@ end
 def get_metadata_from_paths(paths)
   metadata_list = []
   paths.each do |path|
-    metadata_list << get_metadata(path)
+    content = File.read(path)
+    metadata_list << get_metadata(content, path)
   end
   metadata_list
 end
 
-def get_metadata(path = '')
-  content = path.empty? ? $stdin.read : File.read(path)
+def get_metadata(content, path = '')
   metadata = {}
   metadata[:line_count] = content.lines.size
   metadata[:word_count] = content.split(' ').size
