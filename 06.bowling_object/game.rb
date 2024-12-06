@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+require_relative 'shot'
+require_relative 'frame'
+
 class Game
-  def initialize(frames)
-    @frames = frames
+  def initialize(score_sheet)
+    shots = Shot.new(score_sheet).create_shots
+    @frames = Frame.new(shots).create_frames
   end
 
   def calc_point

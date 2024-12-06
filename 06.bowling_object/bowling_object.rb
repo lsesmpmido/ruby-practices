@@ -1,12 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require_relative 'shot'
-require_relative 'frame'
-require_relative 'point'
+require_relative 'game'
 
 score_sheet = ARGV[0]
-shots = Shot.new(score_sheet).create_shots
-frames = Frame.new(shots).create_frames
-point = Point.new(frames).calc_point
-puts point
+game = Game.new(score_sheet)
+puts game.calc_point
