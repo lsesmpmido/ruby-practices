@@ -5,8 +5,9 @@ require_relative 'frame'
 
 class Game
   def initialize(score_sheet)
-    shots = Shot.new(score_sheet).create_shots
-    @frames = Frame.new(shots).create_frames
+    shot = Shot.new(score_sheet)
+    frame = Frame.new(shot.create_shots)
+    @frames = frame.create_frames
   end
 
   def calc_point
