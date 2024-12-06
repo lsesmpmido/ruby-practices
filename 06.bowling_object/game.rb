@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Point
+class Game
   def initialize(frames)
     @frames = frames
   end
