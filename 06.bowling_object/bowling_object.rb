@@ -5,4 +5,4 @@ require_relative 'game'
 
 score_sheet = ARGV[0]
 game = Game.new(score_sheet)
-puts game.calc_point
+puts game.calc_total_score

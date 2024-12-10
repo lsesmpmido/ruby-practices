@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 class Shot
-  def initialize(score_sheet)
-    @scores = score_sheet.split(',')
+  def initialize(mark)
+    @mark = mark
   end
 
-  def create_shots
-    @scores.flat_map do |score|
-      score == 'X' ? [10, 0] : score.to_i
-    end
+  def convert_score
+    @mark == 'X' ? 10 : @mark.to_i
   end
 end
