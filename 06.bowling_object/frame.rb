@@ -4,11 +4,11 @@ require_relative 'shot'
 
 class Frame
   def initialize(first_mark, second_mark, third_mark = nil)
-    @frame = [Shot.new(first_mark), Shot.new(second_mark), Shot.new(third_mark)].compact
+    @frame = [first_mark, second_mark, third_mark].compact.map { |mark| Shot.new(mark) }
   end
 
   def calc_score(number_of_shots = @frame.size)
-    @frame.take(number_of_shots).sum(&:convert_score)
+    @frame.take(number_of_shots).sum(&:score)
   end
 
   def strike?
