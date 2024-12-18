@@ -11,24 +11,45 @@ class ListSegment
     flags = @options[:all] ? File::FNM_DOTMATCH : 0
     file_names = Dir.glob('*', flags).sort
     file_names = file_names.reverse if @options[:reverse]
-    @files = file_names.map { |file_name| FileMetadata.new(file_name, @options) }
+    @files = file_names.map { |file_name| FileMetadata.new(file_name) }
   end
 
-  def display
+  def execute
     if @options[:long]
-      puts "合計 #{@files.sum(&:block_size)}"
-      @files.each do |file|
-        puts file.metadata
-      end
+      display_long
     else
-      row_count = @files.size.ceildiv(COLUMN_COUNT)
-      row_count.times do |row|
-        COLUMN_COUNT.times do |column|
-          file = @files[row + row_count * column]
-          print file.metadata.to_s.ljust(LIST_WIDTH) if file
-        end
-        puts
+      display_short
+    end
+  end
+
+  private
+
+  def display_long
+    puts "合計 #{@files.sum(&:block_size)}"
+    @files.each do |file|
+      attribute = [
+        file.mode,
+        file.nlink,
+        file.uid,
+        file.gid,
+        file.byte_size.to_s.rjust(4),
+        file.mtime.strftime('%-m月').rjust(3),
+        file.mtime.day.to_s.rjust(2),
+        file.mtime.strftime('%H:%M'),
+        file.name
+      ]
+      puts attribute.join(' ')
+    end
+  end
+
+  def display_short
+    row_count = @files.size.ceildiv(COLUMN_COUNT)
+    row_count.times do |row|
+      COLUMN_COUNT.times do |column|
+        file = @files[row + row_count * column]
+        print file.name.ljust(LIST_WIDTH) if file
       end
+      puts
     end
   end
 end

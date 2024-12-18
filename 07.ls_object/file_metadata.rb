@@ -14,31 +14,49 @@ class FileMetadata
     '7' => 'rwx'
   }.freeze
 
-  def initialize(file_path, options)
+  def initialize(file_path)
     @file = file_path
-    @options = options
-  end
-
-  def metadata
-    metadata = ''
-    file_status = File::Stat.new(@file)
-    file_mode = (file_status.mode & 0o777).to_s(8).split('')
-    permissions = file_mode.map { |digit| PERMISSIONS[digit] }.join
-    permissions.prepend(File.ftype(@file) == 'directory' ? 'd' : '-')
-    if @options[:long]
-      metadata += "#{permissions} "
-      metadata += "#{file_status.nlink} "
-      metadata += "#{Etc.getpwuid(file_status.uid).name} "
-      metadata += "#{Etc.getgrgid(file_status.gid).name} "
-      metadata += "#{file_status.size.to_s.rjust(4)} "
-      metadata += "#{file_status.mtime.strftime('%-m月').rjust(3)} "
-      metadata += "#{file_status.mtime.day.to_s.rjust(2)} "
-      metadata += "#{file_status.mtime.strftime('%H:%M')} "
-    end
-    metadata + @file.to_s
+    @file_status = File::Stat.new(@file)
   end
 
   def block_size
-    File::Stat.new(@file).blocks / 2
+    @file_status.blocks / 2
+  end
+
+  def mode
+    ftype + permission
+  end
+
+  def ftype
+    File.ftype(@file) == 'directory' ? 'd' : '-'
+  end
+
+  def permission
+    file_mode = (@file_status.mode & 0o777).to_s(8).split('')
+    file_mode.map { |digit| PERMISSIONS[digit] }.join
+  end
+
+  def nlink
+    @file_status.nlink
+  end
+
+  def uid
+    Etc.getpwuid(@file_status.uid).name
+  end
+
+  def gid
+    Etc.getgrgid(@file_status.gid).name
+  end
+
+  def byte_size
+    @file_status.size
+  end
+
+  def mtime
+    @file_status.mtime
+  end
+
+  def name
+    @file
   end
 end

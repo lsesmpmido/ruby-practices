@@ -12,4 +12,4 @@ opts.on('-l', '--long', 'List long files') { options[:long] = true }
 opts.parse(ARGV)
 
 ls = ListSegment.new(options)
-ls.display
+ls.execute
