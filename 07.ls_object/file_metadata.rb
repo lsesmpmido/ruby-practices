@@ -3,29 +3,27 @@
 require 'etc'
 
 class FileMetadata
+  PERMISSIONS = {
+    '0' => '---',
+    '1' => '--x',
+    '2' => '-w-',
+    '3' => '-wx',
+    '4' => 'r--',
+    '5' => 'r-x',
+    '6' => 'rw-',
+    '7' => 'rwx'
+  }.freeze
+
   def initialize(file_path, options)
     @file = file_path
     @options = options
-  end
-
-  def permission(digit)
-    {
-      '0' => '---',
-      '1' => '--x',
-      '2' => '-w-',
-      '3' => '-wx',
-      '4' => 'r--',
-      '5' => 'r-x',
-      '6' => 'rw-',
-      '7' => 'rwx'
-    }[digit]
   end
 
   def metadata
     metadata = ''
     file_status = File::Stat.new(@file)
     file_mode = (file_status.mode & 0o777).to_s(8).split('')
-    permissions = file_mode.map { |digit| permission(digit) }.join
+    permissions = file_mode.map { |digit| PERMISSIONS[digit] }.join
     permissions.prepend(File.ftype(@file) == 'directory' ? 'd' : '-')
     if @options[:long]
       metadata += "#{permissions} "
