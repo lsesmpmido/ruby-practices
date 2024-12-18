@@ -2,7 +2,7 @@
 
 require 'etc'
 
-class File
+class FileMetadata
   def initialize(file_path, options)
     @file = file_path
     @options = options

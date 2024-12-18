@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require 'optparse'
-require_relative 'list'
+require_relative 'list_segment'
 
 options = { all: false, reverse: false, long: false }
 opts = OptionParser.new
@@ -11,5 +11,5 @@ opts.on('-r', '--reverse', 'List files in reverse order') { options[:reverse] = 
 opts.on('-l', '--long', 'List long files') { options[:long] = true }
 opts.parse(ARGV)
 
-list = List.new(options)
-list.display
+ls = ListSegment.new(options)
+ls.display

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative 'file'
+require_relative 'file_metadata'
 
-class List
+class ListSegment
   COLUMN_COUNT = 3
   LIST_WIDTH = 18
 
@@ -13,7 +13,7 @@ class List
     file_names = Dir.glob('*', flags).sort
     file_names = file_names.reverse if @options[:reverse]
     file_names.each do |file_name|
-      @files << File.new(file_name, @options)
+      @files << FileMetadata.new(file_name, @options)
     end
   end
 
