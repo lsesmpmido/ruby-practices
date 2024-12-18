@@ -2,7 +2,7 @@
 
 require 'etc'
 
-class FileMetadata
+class FileAttribute
   PERMISSIONS = {
     '0' => '---',
     '1' => '--x',
