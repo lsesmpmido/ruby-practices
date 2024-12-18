@@ -8,13 +8,10 @@ class ListSegment
 
   def initialize(options)
     @options = options
-    @files = []
     flags = @options[:all] ? File::FNM_DOTMATCH : 0
     file_names = Dir.glob('*', flags).sort
     file_names = file_names.reverse if @options[:reverse]
-    file_names.each do |file_name|
-      @files << FileMetadata.new(file_name, @options)
-    end
+    @files = file_names.map { |file_name| FileMetadata.new(file_name, @options) }
   end
 
   def display
