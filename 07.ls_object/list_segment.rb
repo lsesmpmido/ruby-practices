@@ -9,9 +9,9 @@ class ListSegment
   def initialize(options)
     @options = options
     flags = @options[:all] ? File::FNM_DOTMATCH : 0
-    file_names = Dir.glob('*', flags).sort
-    file_names = file_names.reverse if @options[:reverse]
-    @files = file_names.map { |file_name| FileMetadata.new(file_name) }
+    file_paths = Dir.glob('*', flags).sort
+    file_paths = file_paths.reverse if @options[:reverse]
+    @files = file_paths.map { |file_path| FileMetadata.new(file_path) }
   end
 
   def execute
