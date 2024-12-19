@@ -11,7 +11,7 @@ class ListSegment
     flags = @options[:all] ? File::FNM_DOTMATCH : 0
     file_paths = Dir.glob('*', flags).sort
     file_paths = file_paths.reverse if @options[:reverse]
-    @files = file_paths.map { |file_path| FileStatistic.new(file_path) }
+    @file_statistics = file_paths.map { |file_path| FileStatistic.new(file_path) }
   end
 
   def execute
@@ -25,29 +25,29 @@ class ListSegment
   private
 
   def display_long
-    puts "合計 #{@files.sum(&:block_size)}"
-    @files.each do |file|
+    puts "合計 #{@file_statistics.sum(&:block_size)}"
+    @file_statistics.each do |file_statistic|
       attribute = [
-        file.mode,
-        file.nlink,
-        file.uid,
-        file.gid,
-        file.byte_size.to_s.rjust(4),
-        file.mtime.strftime('%-m月').rjust(3),
-        file.mtime.day.to_s.rjust(2),
-        file.mtime.strftime('%H:%M'),
-        file.name
+        file_statistic.mode,
+        file_statistic.nlink,
+        file_statistic.uid,
+        file_statistic.gid,
+        file_statistic.byte_size.to_s.rjust(4),
+        file_statistic.mtime.strftime('%-m月').rjust(3),
+        file_statistic.mtime.day.to_s.rjust(2),
+        file_statistic.mtime.strftime('%H:%M'),
+        file_statistic.name
       ]
       puts attribute.join(' ')
     end
   end
 
   def display_short
-    row_count = @files.size.ceildiv(COLUMN_COUNT)
+    row_count = @file_statistics.size.ceildiv(COLUMN_COUNT)
     row_count.times do |row|
       COLUMN_COUNT.times do |column|
-        file = @files[row + row_count * column]
-        print file.name.ljust(LIST_WIDTH) if file
+        file_statistic = @file_statistics[row + row_count * column]
+        print file_statistic.name.ljust(LIST_WIDTH) if file_statistic
       end
       puts
     end

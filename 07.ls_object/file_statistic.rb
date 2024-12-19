@@ -15,12 +15,12 @@ class FileStatistic
   }.freeze
 
   def initialize(file_path)
-    @file = file_path
-    @file_status = File::Stat.new(@file)
+    @file_path = file_path
+    @file_stat = File::Stat.new(@file_path)
   end
 
   def block_size
-    @file_status.blocks / 2
+    @file_stat.blocks / 2
   end
 
   def mode
@@ -28,35 +28,35 @@ class FileStatistic
   end
 
   def ftype
-    File.ftype(@file) == 'directory' ? 'd' : '-'
+    File.ftype(@file_path) == 'directory' ? 'd' : '-'
   end
 
   def permission
-    file_mode = (@file_status.mode & 0o777).to_s(8).split('')
+    file_mode = (@file_stat.mode & 0o777).to_s(8).split('')
     file_mode.map { |digit| PERMISSIONS[digit] }.join
   end
 
   def nlink
-    @file_status.nlink
+    @file_stat.nlink
   end
 
   def uid
-    Etc.getpwuid(@file_status.uid).name
+    Etc.getpwuid(@file_stat.uid).name
   end
 
   def gid
-    Etc.getgrgid(@file_status.gid).name
+    Etc.getgrgid(@file_stat.gid).name
   end
 
   def byte_size
-    @file_status.size
+    @file_stat.size
   end
 
   def mtime
-    @file_status.mtime
+    @file_stat.mtime
   end
 
   def name
-    @file
+    @file_path
   end
 end
