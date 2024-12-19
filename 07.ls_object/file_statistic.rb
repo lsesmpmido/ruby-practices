@@ -2,7 +2,7 @@
 
 require 'etc'
 
-class FileAttribute
+class FileStatistic
   PERMISSIONS = {
     '0' => '---',
     '1' => '--x',

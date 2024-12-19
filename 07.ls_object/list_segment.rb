@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'file_attribute'
+require_relative 'file_statistic'
 
 class ListSegment
   COLUMN_COUNT = 3
@@ -11,7 +11,7 @@ class ListSegment
     flags = @options[:all] ? File::FNM_DOTMATCH : 0
     file_paths = Dir.glob('*', flags).sort
     file_paths = file_paths.reverse if @options[:reverse]
-    @files = file_paths.map { |file_path| FileAttribute.new(file_path) }
+    @files = file_paths.map { |file_path| FileStatistic.new(file_path) }
   end
 
   def execute
